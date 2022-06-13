@@ -1,0 +1,20 @@
+Carrera
+- Progreso
+- Performance
+- Economía
+
+Asignaturas
+- Horario
+- Academica
+- Practicas
+- Servicio
+
+Utilidades
+- Calendario
+
+Automatización
+- Autocarga
+
+---
+Mi cuenta
+- Configuración

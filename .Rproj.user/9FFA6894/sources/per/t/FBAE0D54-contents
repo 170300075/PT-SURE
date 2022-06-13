@@ -1,0 +1,130 @@
+libraries <- c('shiny', 'shinydashboard', 'shinydashboardPlus', 'shinyWidgets', 'DBI', 'RMariaDB', 'dplyr', 'ggplot2', 'highcharter', 'mapboxer')
+lapply(libraries, require, character = TRUE)
+
+header <- dashboardHeader(
+  title = tags$img(src='logo.png', height='50'),
+  userOutput('user')
+)
+
+sidebar <- dashboardSidebar(
+  # User Panel
+  sidebarUserPanel(
+    'Kenneth',
+    subtitle = a(href = '#shiny-tab-settings', 
+                 icon(
+                   'circle',
+                   class = 'text-info'
+                 ),
+                 'Online'),
+    image = 'user.jpg'
+  ),
+  
+  # Search bar
+  sidebarSearchForm(
+    'searchbar',
+    buttonId = 'searchButton',
+    label = 'Buscar'
+  ),
+  
+  # Sidebar content
+  sidebarMenu(
+    # Bookmark and restoring 
+    id = 'sidebar',
+    
+    # Search bar
+    menuItem(
+      'Principal', 
+      tabName = 'principal',
+      icon = icon('dashboard')
+    ),
+    
+    menuItem(
+      'Mapas',
+      tabName = 'maps',
+      icon = icon('map')
+    ),
+    
+    menuItem(
+      'Mis guardados',
+      tabName = 'saves',
+      icon = icon('save')
+    )
+  )
+)
+
+body <- dashboardBody(
+  tabItems(
+    tabItem(
+      tabName = 'principal',
+      h2('Principal'),
+      
+      # Resumen estadistico
+      fluidRow(
+        infoBoxOutput('deaths', width = 3),
+        infoBoxOutput('positives', width = 3),
+        infoBoxOutput('suspicious', width = 3),
+        infoBoxOutput('negatives', width = 3),
+      ),
+      
+      # General
+      fluidRow(
+        tabBox(
+          tabPanel(
+            'Semaforo',
+            
+            # Mapa de Mexico
+            mapboxerOutput('map')
+          ),
+          tabPanel(
+            'Pronostico',
+            
+            # Forecast
+            plotOutput('forecast')
+          )
+        ),
+        
+        box(
+          title = 'Piramide',
+          status = 'info',
+          solidHeader = TRUE,
+          # Piramide poblacional
+          plotOutput('pyramid')
+        )
+      )
+    ),
+    
+    tabItem(
+      tabName = 'maps',
+      h2('Mapas')
+    ),
+    
+    tabItem(
+      tabName = 'saves',
+      h2('Mis guardados')
+    ),
+    
+    # Hidden tab
+    uiOutput('settings')
+  )
+)
+
+ui <- dashboardPage(
+  skin = 'black',
+  md = TRUE,
+  header, sidebar, body
+)
+
+server <- function(input, output, session){
+  # Render user information
+  output$user <- renderUser({
+    dashboardUser(
+      name = 'My account',
+      image = 'user.jpg',
+      title = 'Data Engineer',
+      subtitle = 'Universidad del Caribe',
+      footer = a('Account settings', href = '#', class = 'text-center text-black')
+    )
+  })
+}
+
+shinyApp(ui, server)
