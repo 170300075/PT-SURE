@@ -1,0 +1,77 @@
+@charset "utf-8";
+
+body { background: center center rgb(255, 255, 255); text-align: center; font-family: "Open Sans", Helvetica, Arial, sans-serif; color: rgb(136, 136, 136); font-size: 12px; }
+
+.violet { color: rgb(157, 66, 107); }
+
+a { color: rgb(157, 66, 107); text-decoration: none; transition: all 0.3s ease 0s; }
+
+a:hover { color: rgb(136, 136, 136); text-decoration: none; }
+
+strong { font-weight: bold; }
+
+.txtCalif { width: 30px; }
+
+.header .navbar { margin-bottom: 0px; }
+
+.header .navbar-inner { background: rgb(255, 255, 255); border: 0px; border-radius: 0px; box-shadow: none; margin-left: 0px; padding-left: 0px; margin-right: 5px; padding-right: 5px; }
+
+.header h1 { float: left; margin: 0px; text-align: left; }
+
+.brand { display: inline-block; text-indent: 150px; left: 0px; margin: 0px; width: 160px; height: 40px; color: rgb(0, 0, 0); border-width: 3px; border-color: rgb(0, 0, 0); background: url("../img/sigmaa_5.png") 10px center / 179px 57px no-repeat; }
+
+.brand-phone { display: inline-table; text-indent: 110px; left: 0px; margin: 0px; width: 125px; height: 40px; color: rgb(0, 0, 0); border-width: 3px; border-color: rgb(0, 0, 0); background: url("../img/sigmaa_5.png") 10px center / 125px 40px no-repeat; }
+
+.header ul.nav { font-size: 14px; }
+
+.header ul.nav li a { color: rgb(93, 93, 93); text-shadow: none; padding: 5px 5px 2px; font-size: 11px; line-height: 14px; min-width: 60px; }
+
+.header ul.nav li.current-page a { border-top: 3px solid rgb(0, 119, 179); background: rgb(248, 248, 248); }
+
+.header ul.nav li a:hover { background: linear-gradient(rgb(0, 136, 204), rgb(0, 119, 179)); color: rgb(255, 255, 255); }
+
+.dropdown-menu li { text-align: left; min-height: 0px; }
+
+.header ul.nav li a:hover i { color: rgb(255, 255, 255); }
+
+.navbar .nav .dropdown-toggle .caret { margin-top: 3px; }
+
+table.frmDatos { border-collapse: collapse; border: 1px solid rgb(210, 210, 210); color: rgb(0, 0, 0); font-family: Arial, Verdana, sans-serif; font-size: 11px; }
+
+table.frmDatos tr:hover td { background: rgb(240, 238, 238); }
+
+table.frmDatos th { border: 1px solid rgb(210, 210, 210); background: rgb(180, 180, 180); height: 20px; text-align: center; }
+
+table.frmDatos td { border: 1px solid rgb(210, 210, 210); background: rgb(255, 255, 255); height: 20px; }
+
+table.frmDatos td.frmLabel { font-weight: bold; height: 20px; text-align: right; background: rgb(240, 238, 238); }
+
+table.frmDatos td.boton { text-align: center; }
+
+table.frmDatos tbody th { font-weight: bold; height: 20px; text-align: right; background: rgb(240, 238, 238); }
+
+table.frmDatos tfoot th { font-weight: bold; height: 20px; text-align: center; background-color: rgb(255, 255, 255); }
+
+table.frmDatos input, select, textarea { width: auto; margin-bottom: 3px; border-color: rgb(180, 180, 180); font-size: 12px; }
+
+table.datos { border-collapse: collapse; border: 1px solid rgb(210, 210, 210); font-family: Arial, Verdana, sans-serif; }
+
+table.datos tr:hover td { background: rgb(240, 238, 238); }
+
+table.datos th { border: 1px solid rgb(210, 210, 210); background: linear-gradient(rgb(52, 160, 214), rgb(52, 160, 222)) rgb(52, 160, 214); text-align: center; font-family: Arial, Verdana, sans-serif; font-size: 11px; color: rgb(255, 255, 255); }
+
+table.datos td { border: 1px solid rgb(210, 210, 210); background: rgb(255, 255, 255); height: 25px; font-family: Arial, Verdana, sans-serif; font-size: 11px; }
+
+table.datos td.label { border: 1px solid rgb(210, 210, 210); font-weight: bold; height: 25px; font-family: Arial, Verdana, sans-serif; font-size: 11px; text-align: right; background: rgb(240, 238, 238); }
+
+table.datos td.boton { text-align: center; }
+
+.well { padding: 5px; }
+
+.well legend { margin-bottom: 10px; font-size: 18px; line-height: 30px; }
+
+.well select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input { padding: 2px; }
+
+.form-horizontal .control-group { margin-bottom: 5px; }
+
+.none { display: none; }
