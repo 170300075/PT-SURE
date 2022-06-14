@@ -1,14 +1,22 @@
+# Shiny libraries
 library(shiny)
 library(bs4Dash)
 
+# Library to sort lists
 library(sortable)
 
+# Libraries to connect to databases
 library(DBI)
 library(RMariaDB)
 
+# Libraries manipulate data
 library(dplyr)
+library(data.table)
+
+# Library to create mermaid diagrams
 library(DiagrammeR)
 
+# Stablish connection to database ´sigmaa´
 conn <- dbConnect(RMariaDB::MariaDB(), user = 'root', password = '', dbname = 'sigmaa')
 
 adicionales <- dbGetQuery(conn, 'SELECT * FROM secciones_210300580')
@@ -19,7 +27,7 @@ dbDisconnect(conn)
 
 # Mi componente para generar tablas
 subject <- function(data, status){
-  htmlTemplate("table.html", 
+  htmlTemplate("components/table.html", 
                asignatura = data[1],
                profesor = data[2],
                modalidad = data[3],
@@ -39,23 +47,16 @@ loginForm <- function(){
 
 # Iframe
 my_iframe <- function(){
-  htmlTemplate("www/index.html")
+  htmlTemplate("www/processing/index.html")
 }
- 
-# UI for login
-login_view <- fluidPage(
-  fluidRow(
-    h1("Tienes que loguearte"),
-    loginForm()
-  )
-)
+
 
 # UI for dashboard
 ui <- dashboardPage(
   dashboardHeader(
     rightUi = userOutput('user'),
-    tags$script("libraries/p5.min.js"),
-    tags$script("jExample.js")
+    tags$script("processing/p5.min.js"),
+    tags$script("processing/jExample.js")
   ),
   dashboardSidebar(
     collapsed = FALSE,
@@ -63,7 +64,7 @@ ui <- dashboardPage(
     
     bs4SidebarUserPanel(
       name = 'Kenneth',
-      image = 'user.jpg'
+      image = 'profiles/170300075.jpg'
     ),
     
     sidebarMenu(
@@ -358,7 +359,7 @@ ui <- dashboardPage(
                   'Kenneth Díaz González',
                   subtitle = 'Data Engineer',
                   type = 1,
-                  image = 'user.jpg'
+                  image = 'profiles/170300075.jpg'
               ),
               
               status = 'navy',
@@ -414,16 +415,12 @@ ui <- dashboardPage(
 )
 
 server <- function(input, output, session){
-  
-  # Login view UI
-  
-  
     
-  # Dashboard UI
+  # User Logout
   output$user <- renderUser({
     dashboardUser(
       name = 'Kenneth',
-      image = 'user.jpg',
+      image = 'profiles/170300075.jpg',
       title = 'Ingeniería de datos',
       subtitle = 'Ciencias Básicas e Ingenierías',
       footer = fluidRow(
@@ -441,6 +438,7 @@ server <- function(input, output, session){
     )
   })
   
+  # Plot mermaid plot (Interactive Curricular Map)
   output$mermaid <- renderGrViz({
     grViz("
       digraph dot {
@@ -478,12 +476,14 @@ server <- function(input, output, session){
     
   })
   
+  # Processing IFrame
   output$diagram <- renderUI({
     tags$iframe(src="index.html", width = "100%", height = "100%", frameborder = "no")
   })
   
+  # Show curricular map
   output$mapa_curricular <- renderImage({
-    list(src = "./www/Mapa curricular ideal IDeIO.jpg", width = "100%")
+    list(src = "./www/images/curricular_maps/Mapa curricular ideal IDeIO.jpg", width = "100%")
   })
 }
 
