@@ -16,18 +16,11 @@ library(data.table)
 # Library to create mermaid diagrams
 library(DiagrammeR)
 
-# Stablish connection to database ´sigmaa´
-conn <- dbConnect(RMariaDB::MariaDB(), user = 'root', password = '', dbname = 'sigmaa')
-
-adicionales <- dbGetQuery(conn, 'SELECT * FROM secciones_210300580')
-talleres <- dbGetQuery(conn, 'SELECT * FROM talleres_210300580')
-lengua_extranjera <- dbGetQuery(conn, 'SELECT * FROM lengua_extranjera_210300580')
-
-dbDisconnect(conn)
+source("data.R")
 
 # Mi componente para generar tablas
 subject <- function(data, status){
-  htmlTemplate("components/table.html", 
+  htmlTemplate("table.html", 
                asignatura = data[1],
                profesor = data[2],
                modalidad = data[3],
@@ -42,7 +35,7 @@ subject <- function(data, status){
 
 # Mi componente para formulario de login
 loginForm <- function(){
-  htmlTemplate("components/login.html")
+  htmlTemplate("login.html")
 }
 
 # Iframe
@@ -53,98 +46,156 @@ my_iframe <- function(){
 
 # UI for dashboard
 ui <- dashboardPage(
+  # Dashboard header
   dashboardHeader(
-    rightUi = userOutput('user'),
+    # header config
+    status = "navy",
+    border = TRUE,
+    fixed = TRUE,
+    
+    # User
+    rightUi = userOutput("user"),
     tags$script("processing/p5.min.js"),
-    tags$script("processing/jExample.js")
+    tags$script("processing/jExample.js"),
+    
+    # title dashboard
+    title = dashboardBrand(
+      title = NULL,
+      color = NULL,
+      href = NULL,
+      image = "images/assets/logotipo.png",
+      opacity = 1
+    ),
+    
+    # Notifications at right
+    leftUi = tagList(
+      dropdownMenu(
+        type = "messages",
+        # message items
+        messageItem(
+          from = "Erika Zavala",
+          message = "Necesito comunicarme contigo",
+          icon = shiny::icon("user"),
+          time = NULL,
+          href = NULL,
+          image = NULL,
+          color = "secondary",
+          inputId = NULL
+        )
+      ),
+    
+      dropdownMenu(
+        type = "notifications",
+        # Notification items
+        notificationItem(
+          text = "Error!",
+          icon = shiny::icon("exclamation-triangle"),
+          status = "danger",
+          href = NULL,
+          inputId = NULL
+        )
+      ),
+      
+      dropdownMenu(
+        type = "tasks",
+        # Task items
+        taskItem(text = "Mi progreso", value = 10, color = "info", href = NULL, inputId = NULL)
+      )
+    )
   ),
+
+  # Dashboard Sidebar
   dashboardSidebar(
+    skin = "light",
+    status = "navy",
+    elevation = "3",
     collapsed = FALSE,
     expandOnHover = FALSE,
     
+    # User Panel
     bs4SidebarUserPanel(
-      name = 'Kenneth',
-      image = 'profiles/170300075.jpg'
+      name = "Kenneth",
+      image = "profiles/170300075.jpg"
     ),
     
     sidebarMenu(
-      id = 'carrera',
-      sidebarHeader('Carrera'),
+      id = "carrera",
+      sidebarHeader("Carrera"),
       
       menuItem(
-        text = 'Progreso',
-        tabName = 'progreso',
-        icon = ionicon(name = 'speedometer')
+        text = "Progreso",
+        tabName = "progreso",
+        icon = ionicon(name = "speedometer")
       ),
       
       menuItem(
-        text = 'Rendimiento',
-        tabName = 'rendimiento',
-        icon = ionicon('stats')
+        text = "Rendimiento",
+        tabName = "rendimiento",
+        icon = ionicon("stats")
       ),
       
       menuItem(
-        text = 'Economía',
-        tabName = 'economia',
-        icon = ionicon('cash')
+        text = "Economía",
+        tabName = "economia",
+        icon = ionicon("cash")
       )
     ),
     
     sidebarMenu(
-      id  = 'asignaturas',
-      sidebarHeader('Asignaturas'),
+      id  = "asignaturas",
+      sidebarHeader("Asignaturas"),
       menuItem(
-        text = 'Horario',
-        tabName = 'horario',
-        icon = icon('calendar-o')
+        text = "Horario",
+        tabName = "horario",
+        icon = icon("calendar-o")
       ),
       
       menuItem(
-        text = 'Academicas',
-        tabName = 'academicas',
-        icon = icon('institution')
+        text = "Academicas",
+        tabName = "academicas",
+        icon = icon("institution")
       ),
       
       menuItem(
-        text = 'Practicas',
-        tabName = 'practicas',
-        icon = icon('newspaper-o')
+        text = "Practicas",
+        tabName = "practicas",
+        icon = icon("newspaper-o")
       ),
       
       menuItem(
-        text = 'Servicio',
-        tabName = 'servicio',
-        icon = icon('hospital-o')
+        text = "Servicio",
+        tabName = "servicio",
+        icon = icon("hospital-o")
       )
     ),
     
     sidebarMenu(
-      id = 'utilidades',
-      sidebarHeader('Utilidades'),
+      id = "utilidades",
+      sidebarHeader("Utilidades"),
       menuItem(
-        text = 'Calendario',
-        tabName = 'calendario',
-        icon = icon('calendar')
+        text = "Calendario",
+        tabName = "calendario",
+        icon = icon("calendar")
       )
     ),
     
     sidebarMenu(
-      id = 'bot',
-      sidebarHeader('Bot'),
+      id = "bot",
+      sidebarHeader("Bot"),
       menuItem(
-        text = 'Autocarga',
-        tabName = 'autocarga',
-        icon = icon('circle-o-notch')
+        text = "Autocarga",
+        tabName = "autocarga",
+        icon = icon("circle-o-notch")
       )
     ),
     
     sidebarMenu(
-      id = 'cuenta',
-      sidebarHeader('Mi cuenta'),
+      id = "cuenta",
+      sidebarHeader("Mi cuenta"),
       menuItem(
-        text = 'Configuración',
-        tabName = 'configuracion',
-        icon = icon('gear')
+        text = "Configuración",
+        tabName = "configuracion",
+        icon = icon("gear")
       )
     )
     
@@ -152,60 +203,60 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(
-        tabName = 'progreso',
-        h1('Mi progreso personal'),
+        tabName = "progreso",
+        h1("Mi progreso personal"),
         br(),
         fluidRow(
           # Cajas de informacion
-          infoBox(title = h5('Primer ciclo'), 
+          infoBox(title = h5("Primer ciclo"), 
                  value = "Créditos: 100/100",
                  width = 3,
-                 subtitle = em('Concluido'), 
+                 subtitle = em("Concluido"), 
                  icon = ionicon(name = "checkmark"), 
-                 color = 'lime',
+                 color = "lime",
                  elevation = 2, iconElevation = 2),
           
           # Cajas de informacion
-          infoBox(title = h5('Segundo ciclo'), 
+          infoBox(title = h5("Segundo ciclo"), 
                  value = "Créditos: 80/100", 
                  width = 3,
-                 subtitle = em('En progreso'), 
-                 icon = ionicon(name = 'hourglass'), 
-                 color = 'info',
+                 subtitle = em("En progreso"), 
+                 icon = ionicon(name = "hourglass"), 
+                 color = "info",
                  elevation = 2, iconElevation = 2),
           
           # Cajas de informacion
-          infoBox(title = h5('Tercer ciclo'), 
+          infoBox(title = h5("Tercer ciclo"), 
                  value = "Créditos: 60/80", 
                  width = 3,
-                 subtitle = em(class = 'text-danger','Reprobadas: 1'), 
-                 icon = ionicon('sad'), 
-                 color = 'danger',
+                 subtitle = em(class = "text-danger", "Reprobadas: 1"), 
+                 icon = ionicon("sad"), 
+                 color = "danger",
                  elevation = 2, iconElevation = 2),
           
           # Cajas de informacion
-          infoBox(title = h5('Cuarto ciclo'), 
+          infoBox(title = h5("Cuarto ciclo"), 
                  value = "Créditos: 0/150", 
                  width = 3,
-                 subtitle = em(class='text-muted' ,'Sin comenzar'), 
-                 icon = ionicon('lock'), 
-                 color = 'gray',
+                 subtitle = em(class="text-muted" ,"Sin comenzar"), 
+                 icon = ionicon("lock"), 
+                 color = "gray",
                  elevation = 2, iconElevation = 2),
         ),
         
         fluidRow(
           column(width = 12, offset = 0, br(), br(),
             box(
-             title = h4('Mapa Curricular'),
+             title = h4("Mapa Curricular"),
              closable = FALSE,
              solidHeader = TRUE,
              collapsible = FALSE,
              width = 12,
              status = "navy",
              # Mapa curricular
-             # grVizOutput(outputId = 'mermaid'), 
+             # grVizOutput(outputId = "mermaid"), 
              imageOutput(outputId = "mapa_curricular")
-             # htmlOutput(outputId = 'diagram')
+             # htmlOutput(outputId = "diagram")
              # my_iframe()
             )       
           )
@@ -213,27 +264,27 @@ ui <- dashboardPage(
       ),
       
       tabItem(
-        tabName = 'rendimiento',
-        h1('Indicadores de rendimiento escolar')
+        tabName = "rendimiento",
+        h1("Indicadores de rendimiento escolar")
       ),
       
       tabItem(
-        tabName = 'economia',
-        h1('Inversión escolar')
+        tabName = "economia",
+        h1("Inversión escolar")
       ),
       
       tabItem(
-        tabName = 'horario',
-        h1('Mi horario escolar')
+        tabName = "horario",
+        h1("Mi horario escolar")
       ),
       
       tabItem(
-        tabName = 'academicas',
-        h1('Oferta académica - Verano 2022'),
+        tabName = "academicas",
+        h1("Oferta académica - Verano 2022"),
         tabsetPanel(
-          id = 'tabset',
+          id = "tabset_academicas",
           tabPanel(
-            title = 'Adicionales',
+            title = "Adicionales",
             br(),
             bs4Table(
               cardWrap = TRUE,
@@ -244,7 +295,7 @@ ui <- dashboardPage(
           ),
           
           tabPanel(
-            title = 'Talleres',
+            title = "Talleres",
             br(),
             bs4Table(
               cardWrap = TRUE,
@@ -255,7 +306,7 @@ ui <- dashboardPage(
           ),
           
           tabPanel(
-            title = 'Lengua extrajera',
+            title = "Lengua extrajera",
             br(),
             bs4Table(
               cardWrap = TRUE,
@@ -266,7 +317,7 @@ ui <- dashboardPage(
           ),
           
           tabPanel(
-            title = 'Crear un horario',
+            title = "Crear un horario",
             br(),
             
             # Bucket List
@@ -274,7 +325,7 @@ ui <- dashboardPage(
               column(
                 width = 12,
                 box(
-                  title = h4('Crear un horario'),
+                  title = h4("Crear un horario"),
                   closable = FALSE,
                   solidHeader = TRUE,
                   collapsible = FALSE,
@@ -319,50 +370,71 @@ ui <- dashboardPage(
       ),
       
       tabItem(
-        tabName = 'practicas',
-        h1('Oferta de prácticas profesionales')
+        tabName = "practicas",
+        h1("Oferta de prácticas profesionales"),
+        br(), br(),
+        fluidRow(
+          column(width = 12,
+            box(
+              title = h4("Verano 2022"),
+              closable = FALSE, 
+              solidHeader = TRUE,
+              collapsible = FALSE, 
+              width = 12,
+              status = "navy",
+
+              # Tabla
+              bs4Table(
+                cardWrap = TRUE,
+                bordered = TRUE,
+                striped = TRUE,
+                practicas_profesionales
+              )
+            )
+          )
+        )
       ),
       
       tabItem(
-        tabName = 'servicio',
-        h1('Oferta de servicio social')
+        tabName = "servicio",
+        h1("Oferta de servicio social")
       ),
       
       tabItem(
-        tabName = 'calendario',
-        h1('Calendario escolar')
+        tabName = "calendario",
+        h1("Calendario escolar")
       ),
       
       tabItem(
-        tabName = 'autocarga',
-        h1('Bot de selección academica'),
+        tabName = "autocarga",
+        h1("Bot de selección academica"),
         
         wellPanel(
           actionButton(
-            inputId = 'lanzar_bot',
-            label = 'Lanzar bot de autoselección',
-            icon = icon('rocket'), 
-            status = 'primary', 
+            inputId = "lanzar_bot",
+            label = "Lanzar bot de autoselección",
+            icon = icon("rocket"), 
+            status = "primary", 
             outline = FALSE,
-            size = 'lg')
+            size = "lg")
         ),
       ),
       
       tabItem(
-        tabName = 'configuracion',
-        h1('Ajustes de mi cuenta'),
+        tabName = "configuracion",
+        h1("Ajustes de mi cuenta"),
         br(), br(), br(), br(),
         fluidRow(
           column( width = 8, offset = 4,
             userBox(
               title = userDescription(
-                  'Kenneth Díaz González',
-                  subtitle = 'Data Engineer',
+                  "Kenneth Díaz González",
+                  subtitle = "Data Engineer",
                   type = 1,
-                  image = 'profiles/170300075.jpg'
+                  image = "profiles/170300075.jpg"
               ),
               
-              status = 'navy',
+              status = "navy",
               closable = FALSE,
               elevation = 4,
               collapsible = FALSE,
@@ -370,33 +442,33 @@ ui <- dashboardPage(
               # width = 6,
               wellPanel(
                 passwordInput(
-                  inputId = 'contra_actual',
-                  label = 'Contraseña actual',
-                  width = '100%',
-                  placeholder = 'Escribe aquí'
+                  inputId = "contra_actual",
+                  label = "Contraseña actual",
+                  width = "100%",
+                  placeholder = "Escribe aquí"
                 ),
                 
                 passwordInput(
-                  inputId = 'nueva_contra',
-                  label = 'Nueva contraseña',
-                  width = '100%',
-                  placeholder = 'Tu nueva contraseña'
+                  inputId = "nueva_contra",
+                  label = "Nueva contraseña",
+                  width = "100%",
+                  placeholder = "Tu nueva contraseña"
                 ),
                 
                 passwordInput(
-                  inputId = 'nueva_contra_2',
-                  label = 'Confirma nueva contraseña',
-                  width = '100%',
-                  placeholder = 'Escribe de nuevo'
+                  inputId = "nueva_contra_2",
+                  label = "Confirma nueva contraseña",
+                  width = "100%",
+                  placeholder = "Escribe de nuevo"
                 ),
                 br(),
                 actionButton(
-                  inputId = 'cambiar_contra', 
-                  label = 'Actualizar contraseña',
-                  icon = icon('gear'), 
-                  status = 'success',
-                  size = 'lg', 
-                  width = '100%',
+                  inputId = "cambiar_contra", 
+                  label = "Actualizar contraseña",
+                  icon = icon("gear"), 
+                  status = "success",
+                  size = "lg", 
+                  width = "100%",
                   outline = FALSE
                 )
               )
@@ -419,22 +491,22 @@ server <- function(input, output, session){
   # User Logout
   output$user <- renderUser({
     dashboardUser(
-      name = 'Kenneth',
-      image = 'profiles/170300075.jpg',
-      title = 'Ingeniería de datos',
-      subtitle = 'Ciencias Básicas e Ingenierías',
+      name = "Kenneth",
+      image = "profiles/170300075.jpg",
+      title = "Ingeniería de datos",
+      subtitle = "Ciencias Básicas e Ingenierías",
       footer = fluidRow(
         dashboardUserItem(
           width = 12,
           
           actionButton(
-            inputId = 'logout', 
-            label = 'Cerrar sesión', 
-            icon = ionicon('exit'), 
-            status = 'primary') 
+            inputId = "logout", 
+            label = "Cerrar sesión", 
+            icon = ionicon("exit"), 
+            status = "primary") 
         )
       ),
-      status = 'navy'
+      status = "navy"
     )
   })
   
