@@ -17,7 +17,7 @@ lengua_extranjera <- dbGetQuery(conn, paste0("SELECT * FROM lengua_extranjera_",
 practicas_profesionales <- dbGetQuery(conn, paste0("SELECT * FROM practicas_", username))
 
 # Get data for social service
-# servicio_social <- dbGetQuery(conn, "SELECT * FROM servicio_social_" + username)
-
+proyectos_externos <- dbGetQuery(conn, paste0("SELECT * FROM proyectos_externos_", username))
+proyectos_internos <- dbGetQuery(conn, paste0("SELECT * FROM proyectos_internos_", username))
 # Disconnet from database
 dbDisconnect(conn)

@@ -16,6 +16,7 @@ library(data.table)
 # Library to create mermaid diagrams
 library(DiagrammeR)
 
+# Get all the student data
 source("data.R")
 
 # Mi componente para generar tablas
@@ -114,7 +115,7 @@ ui <- dashboardPage(
     
     # User Panel
     bs4SidebarUserPanel(
-      name = "Kenneth",
+      name = username,
       image = "profiles/170300075.jpg"
     ),
     
@@ -254,7 +255,7 @@ ui <- dashboardPage(
              width = 12,
              status = "navy",
              # Mapa curricular
-             # grVizOutput(outputId = "mermaid"), 
+             # grVizOutput(outputId = "mermaid") 
              imageOutput(outputId = "mapa_curricular")
              # htmlOutput(outputId = "diagram")
              # my_iframe()
@@ -388,7 +389,7 @@ ui <- dashboardPage(
                 cardWrap = TRUE,
                 bordered = TRUE,
                 striped = TRUE,
-                practicas_profesionales
+                practicas_profesionales %>% select(`Empresa`, `Área de desempeño`, `Ubicación`, `Espacios`) %>% arrange(`Empresa`)
               )
             )
           )
@@ -397,7 +398,33 @@ ui <- dashboardPage(
       
       tabItem(
         tabName = "servicio",
-        h1("Oferta de servicio social")
+        h1("Oferta de servicio social"),
+        br(), br(),
+        
+        tabsetPanel(
+          id = "tabset_servicio",
+          tabPanel(
+            title = "Proyectos Internos",
+            br(),
+            bs4Table(
+              cardWrap = TRUE,
+              bordered = TRUE,
+              striped = TRUE,
+              proyectos_internos[,2:4] %>% arrange(`Proyecto`)
+            )
+          ),
+          
+          tabPanel(
+            title = "Proyectos Externos",
+            br(),
+            bs4Table(
+              cardWrap = TRUE,
+              bordered = TRUE,
+              striped = TRUE,
+              proyectos_externos[,2:4] %>% arrange(`Proyecto`)
+            )
+          )
+        )
       ),
       
       tabItem(
@@ -428,7 +455,7 @@ ui <- dashboardPage(
           column( width = 8, offset = 4,
             userBox(
               title = userDescription(
-                  "Kenneth Díaz González",
+                  username,
                   subtitle = "Data Engineer",
                   type = 1,
                   image = "profiles/170300075.jpg"
