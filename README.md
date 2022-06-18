@@ -1,4 +1,5 @@
 # PT-SURE
+MIRO: https://miro.com/welcome/TXFkR1lqdlJtOTZnSzV0dDVaNTFZZDZQYnNZT1lJaDVQZmlMWTNaRFNYWXBiRnRZVlY0Mm4waUMyV1FBd0tjb3wzNDU4NzY0NTI3Njk0NDYxMDAw?share_link_id=170334272160
 
 <h2 style="color: lightblue; text-align: center">Repositorio del proyecto terminal</h2>
 

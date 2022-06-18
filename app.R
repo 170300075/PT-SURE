@@ -16,6 +16,10 @@ library(data.table)
 # Library to create mermaid diagrams
 library(DiagrammeR)
 
+# Library for calendar
+library(toastui)
+library(DT)
+
 # Get all the student data
 source("data.R")
 
@@ -287,22 +291,35 @@ ui <- dashboardPage(
           tabPanel(
             title = "Adicionales",
             br(),
-            bs4Table(
-              cardWrap = TRUE,
-              bordered = TRUE,
-              striped = TRUE,
-              adicionales[,4:12] %>% arrange(`Asignatura`, `Profesor`)
-            ) 
+            box(
+              title = h4("Adicionales"),
+              closable = FALSE,
+              solidHeader = TRUE,
+              collapsible = FALSE,
+              width = 12,
+              status = "teal",
+              DT::dataTableOutput(outputId = "tabla_adicionales")
+            )
           ),
           
           tabPanel(
             title = "Talleres",
             br(),
-            bs4Table(
-              cardWrap = TRUE,
-              bordered = TRUE,
-              striped = TRUE,
-              talleres[,4:12] %>% arrange(`Asignatura`)
+            # bs4Table(
+            #   cardWrap = TRUE,
+            #   bordered = TRUE,
+            #   striped = TRUE,
+            #   talleres[,4:12] %>% arrange(`Asignatura`)
+            # )
+            
+            box(
+              title = h4("Talleres"),
+              closable = FALSE,
+              solidHeader = TRUE,
+              collapsible = FALSE,
+              width = 12,
+              status = "teal",
+              dataTableOutput(outputId = "tabla_talleres")
             )
           ),
           
@@ -429,7 +446,10 @@ ui <- dashboardPage(
       
       tabItem(
         tabName = "calendario",
-        h1("Calendario escolar")
+        h1("Calendario escolar"),
+        br(), br(),
+        
+        calendarOutput(outputId = "calendar", width = "100%", height = "600px")
       ),
       
       tabItem(
@@ -535,6 +555,21 @@ server <- function(input, output, session){
       ),
       status = "navy"
     )
+  })
+  
+  # Tabla adicionales
+  output$tabla_adicionales <- DT::renderDataTable({
+    adicionales[,4:12] %>% arrange(`Asignatura`, `Profesor`)
+  })
+  
+  # Tabla talleres
+  output$tabla_talleres <- DT::renderDataTable({
+    talleres[,4:12] %>% arrange(`Asignatura`, `Profesor`)
+  })
+  
+  # Calendar
+  output$calendar <- renderCalendar({
+    calendar(cal_demo_data())
   })
   
   # Plot mermaid plot (Interactive Curricular Map)

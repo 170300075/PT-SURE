@@ -1,6 +1,7 @@
 my_packages <- c("shiny", "bs4Dash", "sortable", "DBI", 
                  "RMariaDB", "dplyr", "data.table", "DiagrammeR",
-                 "reticulate", "shinyWidgets", "highcharter", "plotly") 
+                 "reticulate", "shinyWidgets", "highcharter", "plotly",
+                 "toastui", "DT") 
 
 # Install required packages
 lapply(my_packages, install.packages, character = TRUE)
