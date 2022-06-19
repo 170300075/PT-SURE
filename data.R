@@ -5,8 +5,8 @@ readRenviron(".env")
 username = Sys.getenv('ID')
 password = Sys.getenv('PASS')
 
-# Stablish connection to database ´sigmaa´
-conn <- dbConnect(RMariaDB::MariaDB(), user = "root", password = "", dbname = "sigmaa")
+# Stablish connection to database ´sure´
+conn <- dbConnect(RMariaDB::MariaDB(), user = "root", password = "", dbname = "sure")
 
 # Get data for academic offer
 adicionales <- dbGetQuery(conn, paste0("SELECT * FROM secciones_", username))
