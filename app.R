@@ -20,6 +20,12 @@ library(DiagrammeR)
 library(toastui)
 library(DT)
 
+library(bslib)
+
+# Get the custom shiny inputs
+source("matriculaInput.R")
+source("contraseñaInput.R")
+
 # Get all the student data
 source("data.R")
 
@@ -39,9 +45,85 @@ subject <- function(data, status){
 }
 
 # Mi componente para formulario de login
-loginForm <- function(){
-  htmlTemplate("login.html")
-}
+loginForm <- page(
+  theme = bs_theme(version = 5),
+  tags$head(tags$script(src = "showPassword.js")),
+  tags$body(class = "bg-light"),
+  div(
+    class = "container",
+    div(
+      class = "row vh-100 align-items-center justify-content-center",
+      div(
+        class = "col-7",
+        div(
+          class = "card border-0 shadow-lg",
+          div(
+            class = "row g-0",
+            div(
+              class = "col-md-5",
+              img(
+                class = "img-fluid rounded-start",
+                src = "images/assets/entrada.jpeg"
+              )
+            ),
+            
+            div(
+              class = "col-md-7",
+              div(
+                class = "card-body",
+                h5(
+                  class = "card-title text-center mt-3 display-6", # nolint
+                  "Iniciar sesión"
+                ),
+                
+                tags$div(
+                  class = "col-10 mx-auto mt-4",
+                  
+                  matriculaInput(inputId = "id", label = "Tu matricula"),
+                
+                  contraseñaInput(inputId = "pass", label = "Contraseña"),
+                  
+                  div(
+                    class = "form-check mb-4",
+                    tags$input(
+                      type = "checkbox",
+                      class = "form-check-input",
+                      id = "exampleCheck1",
+                      "onclick"="showPassword()",
+                      tags$label(
+                        class = "form-check-label user-select-none",
+                        `for` = "exampleCheck1",
+                        "Mostrar contraseña"
+                      )
+                    )
+                  ),
+                  
+                  actionButton(
+                    inputId = "acceder",
+                    label = "Acceder",
+                    class = "btn-primary"
+                  ),
+                  
+                  textOutput(
+                    outputId = "user_id"
+                  )
+                )
+              ),
+              
+              p(
+                class = "card-text text-center mt-2",
+                tags$small(
+                  class = "text-muted",
+                  "Universidad del Caribe"
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
 
 # Iframe
 my_iframe <- function(){
@@ -622,4 +704,4 @@ server <- function(input, output, session){
 }
 
 options(shiny.autoreload = TRUE)
-shinyApp(ui, server)
+shinyApp(loginForm, server)
