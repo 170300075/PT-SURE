@@ -45,11 +45,12 @@ subject <- function(data, status){
 }
 
 # Mi componente para formulario de login
-loginForm <- page(
-  theme = bs_theme(version = 5),
+login <- page(
+  # theme = bs_theme(version = 5),
   tags$head(tags$script(src = "showPassword.js")),
   tags$body(class = "bg-light"),
   div(
+    id = "placeholder",
     class = "container",
     div(
       class = "row vh-100 align-items-center justify-content-center",
@@ -79,9 +80,9 @@ loginForm <- page(
                 tags$div(
                   class = "col-10 mx-auto mt-4",
                   
-                  matriculaInput(inputId = "id", label = "Tu matricula"),
+                  matriculaInput(inputId = "id_user", label = "Tu matricula"),
                 
-                  contraseñaInput(inputId = "pass", label = "Contraseña"),
+                  contraseñaInput(inputId = "password", label = "Contraseña"),
                   
                   div(
                     class = "form-check mb-4",
@@ -130,9 +131,8 @@ my_iframe <- function(){
   htmlTemplate("www/processing/index.html")
 }
 
-
 # UI for dashboard
-ui <- dashboardPage(
+dashboard <- dashboardPage(
   # Dashboard header
   dashboardHeader(
     # header config
@@ -615,8 +615,64 @@ ui <- dashboardPage(
   )
 )
 
+ui <- div(
+  # wrapper container for login
+  div(id = "login_container"),
+
+  # wrapper container for dashboard
+  div(id = "dashboard_container")
+)
+
 server <- function(input, output, session){
+
+  # initially we insert the login form
+  insertUI(
+    selector = "#login_container",
+    where = "afterBegin",
+    ui = login
+  )
+
+  # if button is form button is pressed
+  observeEvent(input$acceder, {
+    # then remove the current login container
+    removeUI(
+      selector = "#login_container"
+    )
+
+    # verify if credentials are correct
+    if(input$id_user == 170300075){
+      # if does, insert the bashboard placeholder in the page
+      insertUI(
+        selector = "#dashboard_container",
+        where = "afterBegin",
+        ui = uiOutput("dashboard")
+      )
+
+      output$dashboard <- renderUI({
+        dashboard
+      })
+    }
+
+    # if credentials are incorrect
+    else {
+      # insert the login form container again (because it was deleted before)
+      insertUI(
+        selector = "#dashboard_container",
+        where = "beforeBegin",
+        ui = div(id = "login_container")
+      )
+
+      # insert the login form in the login container
+      insertUI(
+        selector = "#login_container",
+        where = "afterBegin",
+        ui = login
+      )
+    }
     
+  })
+
+  
   # User Logout
   output$user <- renderUser({
     dashboardUser(
@@ -703,5 +759,6 @@ server <- function(input, output, session){
   })
 }
 
+options(shiny.port = 3000)
 options(shiny.autoreload = TRUE)
-shinyApp(loginForm, server)
+shinyApp(ui, server)
