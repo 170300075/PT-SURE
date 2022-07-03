@@ -1,8 +1,10 @@
+id_user <- student_data$id_user # "170300075"
+
 # logout user output
-username <- "Kenneth"
+username <- student_data$username# "Kenneth"
 profile_picture <- "profiles/170300075.jpg"
-career <- "Ingeniería en datos"
-department <- "Ciencias Básicas e Ingenierías"
+career <- student_data$career #"Ingeniería en datos"
+department <- student_data$career$department #"Ciencias Básicas e Ingenierías"
 
 # dropdown menu output
 messageData <- data.frame(
@@ -44,7 +46,7 @@ library(RMariaDB)
 readRenviron(".env")
 
 # Get student credentials
-id_user <- Sys.getenv('ID')
+# id_user <- Sys.getenv('ID')
 user <- Sys.getenv('MYSQL_ADDON_USER')
 password <- Sys.getenv('MYSQL_ADDON_PASSWORD')
 host <- Sys.getenv('MYSQL_ADDON_HOST')

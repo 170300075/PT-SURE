@@ -15,3 +15,21 @@ JavaScript error: https://uclb.ucaribe.edu.mx/sass/loginAction.do, line 361: Typ
 JavaScript warning: https://uclb.ucaribe.edu.mx/sass/js/jquery.js, line 19: unreachable code after return statement
 1656276204828	Marionette	INFO	Stopped listening on port 57974
 [Parent 7792, IPC I/O Parent] WARNING: DuplicateHandle failed for handle 0 in TransferHandles: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:723
+1656563707526	geckodriver	INFO	Listening on 127.0.0.1:52882
+1656563710858	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "52883" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\kenne\\AppData\\Local\\Temp\\rust_mozprofile8AscTn"
+1656563713105	Marionette	INFO	Marionette enabled
+1656563713129	Marionette	INFO	Listening on port 52894
+WebDriver BiDi listening on ws://localhost:52883
+Read port: 52894
+1656563713809	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\kenne\\AppData\\Local\\Temp\\rust_mozprofile8AscTn\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:52883/devtools/browser/95f31118-1c9a-4d4e-ba83-69d477148940
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://uclb.ucaribe.edu.mx"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://uclb.ucaribe.edu.mx"
+JavaScript error: resource://gre/modules/LoginManagerParent.jsm, line 136: TypeError: gRecipeManager is null
+JavaScript warning: https://uclb.ucaribe.edu.mx/sass/js/jquery.js, line 19: unreachable code after return statement
+JavaScript error: https://uclb.ucaribe.edu.mx/sass/loginAction.do, line 361: TypeError: repHora is null
+JavaScript warning: https://uclb.ucaribe.edu.mx/sass/js/jquery.js, line 19: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://uclb.ucaribe.edu.mx"
+JavaScript error: resource://gre/modules/LoginManagerParent.jsm, line 136: TypeError: gRecipeManager is null
+1656563735461	Marionette	INFO	Stopped listening on port 52894

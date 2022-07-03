@@ -1,21 +1,19 @@
 library(shiny)
 library(bslib)
 library(bs4Dash)
+library(dplyr)
 library(toastui)
+library(ggplot2)
 library(DiagrammeR)
+library(waiter)
+library(shinymarkdown)
 
 # our custom components
 source("matriculaInput.R")
 source("contraseñaInput.R")
-# placeholder personal data (only development)
-source("userdata.R")
+source("sessionData.R")
 
 login <- div(
-  #theme = bs_theme(version = 5),
-  #tags$head(
-  #  tags$script(src = "showPassword.js"),
-  #),
-  
   div(
     class = "bg-dark bg-gradient",
     div(
@@ -121,6 +119,7 @@ dashboard <- dashboardPage(
     collapsed = FALSE,
     expandOnHover = TRUE,
 
+    # userpanel output
     uiOutput(outputId = "user_panel"),
 
     # sidebar career menu
@@ -218,95 +217,134 @@ dashboard <- dashboardPage(
 
   # The Dashboard Body
   dashboardBody(
-    div(
-      class = "",
-      tabItems(
-        # personal progress tabitem
-        tabItem(
-          tabName = "progress",
+    tabItems(
+      # personal progress tabitem
+      tabItem(
+        tabName = "progress",
+        h1("Mapa Curricular", class = "m-4 mb-5 text-center"),
 
-          h1("Mapa Curricular", class = "m-4 mb-5 text-center"),
+        # output curricular map
+        grVizOutput("map")
+      ),
 
-          # output curricular map
-          grVizOutput("map")
+      # personal KPI tabitem
+      tabItem(
+        tabName = "performance",
+
+        h1("Estadísticas generales", class = "m-4 mb-5 text-center"),
+        fluidRow(
+          # infobox outputs
+          infoBoxOutput(outputId = "first_cycle", width = 3),
+          infoBoxOutput(outputId = "second_cycle", width = 3),
+          infoBoxOutput(outputId = "third_cycle", width = 3),
+          infoBoxOutput(outputId = "fourth_cycle", width = 3)
         ),
-
-        # personal KPI tabitem
-        tabItem(
-          tabName = "performance",
-
-          h1("Estadísticas generales", class = "m-4 mb-5 text-center"),
-          fluidRow(
-            # infobox outputs
-            infoBoxOutput(outputId = "first_cycle", width = 3),
-            infoBoxOutput(outputId = "second_cycle", width = 3),
-            infoBoxOutput(outputId = "third_cycle", width = 3),
-            infoBoxOutput(outputId = "fourth_cycle", width = 3)
+        
+        fluidRow(
+          column(width = 6,
+            # output for speedometer 
+            chartOutput(outputId = "speedometer")
+          ), 
+          
+          column(width = 6,
+            # school grades by semester
+            chartOutput(outputId = "grades")
           )
-        ),
+        )
+        
+      ),
 
-        # educational investment tabitem
-        tabItem(
-          tabName = "investment",
+      # educational investment tabitem
+      tabItem(
+        tabName = "investment",
 
-          h1("Pagos y adeudos", class = "m-4 mb-5 text-center"),
-          datagridOutput(outputId = "payments")
-        ),
-
-        # scholar chedule tabitem
-        tabItem(
-          tabName = "schedule",
-
-          h1("Horario y calificaciones", class = "m-4 mb-5 text-center")
-        ),
-
-        # academic offer tabitem
-        tabItem(
-          tabName = "subjects",
-
-          h1("Lista de asignaturas", class = "m-4 mb-5 text-center")
-        ),
-
-        # practices offer tabitem
-        tabItem(
-          tabName = "practices",
-
-          h1("Lista de prácticas", class = "m-4 mb-5 text-center")
-        ),
-
-        # service offer tabitem
-        tabItem(
-          tabName = "service",
-
-          h1("Lista de servicio social", class = "m-4 mb-5 text-center")
-        ),
-
-        # school calendar tabitem
-        tabItem(
-          tabName = "calendar",
-          h1(
-            paste0("Calendario ", format(Sys.Date(), "%Y")), 
-            class = "m-4 mb-0 text-center"
+        h1("Pagos y adeudos", class = "m-4 mb-5 text-center"),
+        fluidRow(
+          column(width = 6,
+            box(
+              title = h4("Tabla de datos"),
+              closable = FALSE, 
+              solidHeader = TRUE,
+              collapsible = FALSE, 
+              width = 12,
+              status = "navy",
+              
+              chartOutput(outputId = "payments_chart", height = "500px")
+            )
           ),
-          calendarOutput(
-            outputId = "school_calendar", 
-            width = "100%",
-            height = "600px" 
+          
+          column(width = 6,
+            box(
+              title = h4("Histórico"),
+              closable = FALSE, 
+              solidHeader = TRUE,
+              collapsible = FALSE, 
+              width = 12,
+              status = "navy",
+              
+              datagridOutput(outputId = "payments", height = "500px")
+            )
           )
+        )
+      ),
+
+      # scholar chedule tabitem
+      tabItem(
+        tabName = "schedule",
+
+        h1("Horario y calificaciones", class = "m-4 mb-5 text-center")
+      ),
+
+      # academic offer tabitem
+      tabItem(
+        tabName = "subjects",
+
+        h1("Lista de asignaturas", class = "m-4 mb-5 text-center")
+      ),
+
+      # practices offer tabitem
+      tabItem(
+        tabName = "practices",
+
+        h1("Lista de prácticas", class = "m-4 mb-5 text-center")
+      ),
+
+      # service offer tabitem
+      tabItem(
+        tabName = "service",
+
+        h1("Lista de servicio social", class = "m-4 mb-5 text-center")
+      ),
+
+      # school calendar tabitem
+      tabItem(
+        tabName = "calendar",
+        h1(
+          paste0("Calendario ", format(Sys.Date(), "%Y")), 
+          class = "m-4 mb-0 text-center"
         ),
+        calendarOutput(
+          outputId = "school_calendar", 
+          width = "100%",
+          height = "600px" 
+        )
+      ),
 
-        # teaching performance tabitem
-        tabItem(
-          tabName = "educators",
+      # teaching performance tabitem
+      tabItem(
+        tabName = "educators",
 
-          h1("Evaluación al desempeño docente", class = "m-4 mb-5 text-center")
-        ),
+        h1("Evaluación al desempeño docente", class = "m-4 mb-5 text-center")
+      ),
 
-        # personal data tabitem
-        tabItem(
-          tabName = "config",
+      # personal data tabitem
+      tabItem(
+        tabName = "config",
 
-          h1("Ajustes de la cuenta", class = "m-4 mb-5 text-center")
+        h1("Ajustes de la cuenta", class = "m-4 mb-5 text-center"),
+        mdInput(inputId = "editor", 
+                height = "500px", 
+                hide_mode_switch = FALSE
         )
       )
     )
@@ -315,7 +353,7 @@ dashboard <- dashboardPage(
   # The Dashboard Footer
   dashboardFooter(
     left = HTML("<p class='text-muted m-0'><b>Sistema Unificado de Recomendación Escolar</b> &copy; Universidad del Caribe</p>"), 
-    right = HTML("<p>Made with <i class='fas fa-heart text-danger'></i> by <b>Kenneth</b></p>"), 
+    right = HTML("<p class='m-0'>Made with <i class='fas fa-heart text-danger'></i> by <b>Kenneth</b></p>"), 
     fixed = FALSE
   ),
 
@@ -338,6 +376,10 @@ ui <- div(
     tags$link(rel="stylesheet", href = "hiddenScrollbar.css"),
     tags$script(src = "showPassword.js")
   ),
+
+  # use the waiter functionality
+  useWaiter(),
+
   # wrapper container for login
   div(id = "login_container"),
 
@@ -346,6 +388,8 @@ ui <- div(
 )
 
 server <- function(input, output, session) {
+  data <- reactiveValues()
+  
   # initially we insert the login form
   insertUI(
     selector = "#login_container",
@@ -353,22 +397,42 @@ server <- function(input, output, session) {
     ui = login
   )
 
-  # if button is form button is pressed
+  # if login form button is pressed
   observeEvent(input$acceder, {
     # then remove the current login container
     removeUI(
       selector = "#login_container"
     )
-
+    
     # verify if credentials are correct
-    if(input$id_user == 170300075){
+    if(validateCredentials(as.character(input$id_user), as.character(input$password))){
+      # if so, then we get user data
+      data$student_data <- getData(as.character(input$id_user))
+      data$notificationData <- notificationData
+      data$messageData <- messageData
+      data$taskData <- taskData
+      data$payments <- payments
+      data$aditionals <- aditionals(data$student_data$id_user)
+      data$workshops <- workshops(data$student_data$id_user)
+      data$foreign_languages <- foreign_languages(data$student_data$id_user)
+      data$practices <- practices(data$student_data$id_user)
+      data$internal_projects <- internal_projects(data$student_data$id_user)
+      data$external_projects <- external_projects(data$student_data$id_user)
+      ## dbDisconnect(conn)
+      
+      
+      # show a waiter while loading page
+      waiter_show(html = spin_fading_circles())
+      
       # if does, insert the bashboard in the page
       insertUI(
         selector = "#dashboard_container",
         where = "afterBegin",
         ui = dashboard
       )
-
+      
+      # hide waiter after page is loaded
+      waiter_hide()
     }
 
     # if credentials are incorrect
@@ -398,10 +462,10 @@ server <- function(input, output, session) {
   output$user <- renderUser({
     # adding the user specific data
     dashboardUser(
-      name = username,
+      name = data$student_data$username,
       image = profile_picture,
-      title = career,
-      subtitle = department,
+      title = data$student_data$career$name,
+      subtitle = data$student_data$career$department,
       status = "navy",
       footer = fluidRow(
         dashboardUserItem(
@@ -422,7 +486,7 @@ server <- function(input, output, session) {
 
   # dropdown message menu (left navbar side)
   output$messageMenu <- renderMenu({
-    messages <- apply(messageData, 1, function(row) {
+    messages <- apply(data$messageData, 1, function(row) {
       messageItem(
         from = row[["from"]],
         message = row[["message"]],
@@ -440,7 +504,7 @@ server <- function(input, output, session) {
 
   # dropdown notification menu (left navbar side)
   output$notificationMenu <- renderMenu({
-    notifications <- apply(notificationData, 1, function(row) {
+    notifications <- apply(data$notificationData, 1, function(row) {
       notificationItem(
         text = row[["text"]],
         icon = icon(row[["icon"]]),
@@ -455,7 +519,7 @@ server <- function(input, output, session) {
 
   # dropdown task menu (left navbar side)
   output$taskMenu <- renderMenu({
-    tasks <- apply(taskData, 1, function(row) {
+    tasks <- apply(data$taskData, 1, function(row) {
       taskItem(
         text = row[["text"]],
         value = row[["value"]],
@@ -473,13 +537,15 @@ server <- function(input, output, session) {
   # render infoboxes
   output$first_cycle <- renderInfoBox({
     infoBox(
-      title = h5("Primer ciclo"),
+      title = "Primer ciclo",
       value = "Créditos: 100/100",
       subtitle = em("Concluido"),
       icon = icon("check-circle"),
       color = "lime",
       elevation = 2,
-      iconElevation = 2
+      iconElevation = 0,
+      gradient = TRUE,
+      fill = TRUE
     )
   })
 
@@ -488,7 +554,7 @@ server <- function(input, output, session) {
       title = h5("Segundo ciclo"),
       value = "Créditos: 80/100",
       subtitle = em("En progreso"),
-      icon = icon("circle-notch"),
+      icon = icon("circle-notch", class = "fa-spin"),
       color = "info",
       elevation = 2,
       iconElevation = 2
@@ -536,7 +602,7 @@ server <- function(input, output, session) {
   # render sidebar user panel
   output$user_panel <- renderUI({
     sidebarUserPanel(
-      name = username,
+      name = data$student_data$username,
       image = profile_picture
     )
   })
@@ -580,9 +646,49 @@ server <- function(input, output, session) {
   
   # render payments
   output$payments <- renderDatagrid({
-    datagrid(payments)
+    datagrid(
+      data$payments(data$student_data$id_user)[,4:9],
+      theme = "striped"
+    )
+  })
+  
+  output$payments_chart <- renderChart({
+    data$payments(data$student_data$id_user) %>% 
+    arrange(Fecha) %>% 
+    chart(aes(x = Vencimiento, y = Monto), type = "area")
+  })
+  
+  output$speedometer <- renderChart({
+    chart(list(Años = 4), type = "gauge", height = "500px") %>% 
+      chart_options(
+        circularAxis = list(scale = list(min = 4, max = 8), title = "Permanencia"),
+        series = list(angleRange = list(start = 225, end = 135)),
+        plot = list(
+          bands = list(
+            list(range = c(4, 6), color = "#55bf3b"),
+            list(range = c(6, 8), color = "#dddf0d"),
+            list(range = c(8, 12), color = "#df5353")
+          )
+        ),
+        theme = list(plot = list(bands = list(barWidth = 40)))
+      )
+  })
+
+  # Render school grades
+  output$grades <- renderChart({
+    chart(economics, aes(date, psavert), type = "line")
+  })
+  
+  # Render markdown editor
+  observeEvent(input$show, {
+    show_editor(.id = "editor")
+  })
+  
+  observeEvent(input$hide, {
+    hide_editor(.id = "editor")
   })
 }
 
+options(shiny.autoreload = TRUE)
 options(shiny.port = 4000)
 shinyApp(ui, server)
