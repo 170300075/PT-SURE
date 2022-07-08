@@ -7,6 +7,7 @@ library(ggplot2)
 library(DiagrammeR)
 library(waiter)
 library(shinymarkdown)
+library(mapboxer)
 
 # our custom components
 source("matriculaInput.R")
@@ -15,7 +16,7 @@ source("sessionData.R")
 
 login <- div(
   div(
-    class = "bg-dark bg-gradient",
+    class = "bg-light",
     div(
       class = "container",
       div(
@@ -117,7 +118,7 @@ dashboard <- dashboardPage(
     status = "lime",
     elevation = "3",
     collapsed = FALSE,
-    expandOnHover = TRUE,
+    expandOnHover = FALSE,
 
     # userpanel output
     uiOutput(outputId = "user_panel"),
@@ -334,7 +335,9 @@ dashboard <- dashboardPage(
       tabItem(
         tabName = "educators",
 
-        h1("Evaluación al desempeño docente", class = "m-4 mb-5 text-center")
+        h1("Evaluación al desempeño docente", class = "m-4 mb-5 text-center"),
+
+        uiOutput(outputId = "teachers_forms")
       ),
 
       # personal data tabitem
@@ -342,9 +345,13 @@ dashboard <- dashboardPage(
         tabName = "config",
 
         h1("Ajustes de la cuenta", class = "m-4 mb-5 text-center"),
-        mdInput(inputId = "editor", 
-                height = "500px", 
-                hide_mode_switch = FALSE
+
+        uiOutput(outputId = "user_information"),
+
+        mdInput(
+          inputId = "editor", 
+          height = "500px", 
+          hide_mode_switch = FALSE
         )
       )
     )
@@ -551,37 +558,43 @@ server <- function(input, output, session) {
 
   output$second_cycle <- renderInfoBox({
     infoBox(
-      title = h5("Segundo ciclo"),
+      title = "Segundo ciclo",
       value = "Créditos: 80/100",
       subtitle = em("En progreso"),
       icon = icon("circle-notch", class = "fa-spin"),
       color = "info",
       elevation = 2,
-      iconElevation = 2
+      iconElevation = 0,
+      gradient = TRUE,
+      fill = TRUE
     )
   })
 
   output$third_cycle <- renderInfoBox({
     infoBox(
-      title = h5("Tercer ciclo"),
+      title = "Tercer ciclo",
       value = "Créditos: 60/80",
-      subtitle = em("Reprobadas: 1", class = "text-danger"),
+      subtitle = em("Reprobadas: 1", class = "text-warning"),
       icon = icon("exclamation-circle"),
       color = "danger",
       elevation = 2,
-      iconElevation = 2
+      iconElevation = 0,
+      gradient = TRUE,
+      fill = TRUE
     )
   })
 
   output$fourth_cycle <- renderInfoBox({
     infoBox(
-      title = h5("Cuarto ciclo"),
+      title = "Cuarto ciclo",
       value = "Créditos: 0/150",
       subtitle = em("Sin comenzar", class = "text-muted"),
       icon = icon("pause-circle"),
       color = "gray-dark",
       elevation = 2,
-      iconElevation = 2
+      iconElevation = 0,
+      gradient = TRUE,
+      fill = TRUE
     )
   })
 
@@ -602,7 +615,7 @@ server <- function(input, output, session) {
   # render sidebar user panel
   output$user_panel <- renderUI({
     sidebarUserPanel(
-      name = data$student_data$username,
+      name = data$student_data$id_user,
       image = profile_picture
     )
   })
@@ -667,7 +680,8 @@ server <- function(input, output, session) {
           bands = list(
             list(range = c(4, 6), color = "#55bf3b"),
             list(range = c(6, 8), color = "#dddf0d"),
-            list(range = c(8, 12), color = "#df5353")
+            list(range = c(8, 10), color = "#ffa500"),
+            list(range = c(10, 12), color = "#df5353")
           )
         ),
         theme = list(plot = list(bands = list(barWidth = 40)))
@@ -687,8 +701,179 @@ server <- function(input, output, session) {
   observeEvent(input$hide, {
     hide_editor(.id = "editor")
   })
+
+  output$user_information <- renderUI({
+    fluidRow(
+      userBox(
+        title = userDescription(
+          title = paste(data$student_data$username, data$student_data$first_lastname, data$student_data$second_lastname),
+          subtitle = data$student_data$career$name,
+          image = profile_picture,
+          backgroundImage = "https://cdn.statically.io/img/wallpaperaccess.com/full/1119564.jpg"
+        ),
+        
+        width = 6,
+        status = "olive",
+        collapsible = FALSE,
+        closable = FALSE,
+        maximizable = FALSE,
+        
+        div(
+          class = "p-5",
+          tabBox(
+            id = "tabcard",
+            title = "Mis datos",
+            width = 12,
+            collapsible = FALSE,
+            closable = FALSE,
+            maximizable = FALSE,
+            icon = icon("list-alt"),
+            elevation = 2,
+            side = "left",
+            footer = p("Esto es el footer", class = "m-0 small text-muted"),
+            tabPanel(
+              title = "Mis datos", 
+              "Content 1"
+            ),
+
+            tabPanel(
+              title = "Familiares", 
+              "Content 2"
+            ),
+
+            tabPanel(
+              title = "Trabajo", 
+              "Content 3"
+            ),
+            
+            tabPanel(
+              title = "Procedencia",
+              "Content 4"
+            )
+          )
+        ),
+
+        footer = p(
+            class = "m-0 small text-muted",
+            "Última actualización: recientemente"
+          )
+      ),
+
+      box(
+        title = "Ubicaciones",
+        width = 6,
+        mapboxer(
+          width = "100%",
+          center = c(-73.9165, 40.7114),
+          zoom = 10
+        )
+      )
+    )
+  })
+
+  output$teachers_forms <- renderUI({
+    # Render all the teachers evalution performance
+    fluidRow(
+      userBox(
+        title = userDescription(
+          title = p("Pensamiento crítico para ingeniería", class = "m-3"),
+          subtitle = p("Mtra. Erika Eréndira Zavala López", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/erika-zavala.153bf1ac7080.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "success",
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 01-07-2022 14:35:17", class = "m-0 small text-muted")
+      ),
+
+      userBox(
+        title = userDescription(
+          title = p("Proyecto terminal", class = "m-3"),
+          subtitle = p("Mtra. Nancy Aguas García", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/nancy-aguas.7b4e185a81f0.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "info",
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 31-06-2022 10:17:46", class = "m-0 small text-muted")
+      ),
+
+      userBox(
+        title = userDescription(
+          title = p("Minería de datos", class = "m-3"),
+          subtitle = p("Dr. Héctor Fernando Gómez García", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/fernando-gomez.0731bdac903f.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "danger",
+        background = "white",
+        gradient = TRUE,
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 31-06-2022 10:17:46", class = "m-0 small text-muted")
+      ),
+
+      userBox(
+        title = userDescription(
+          title = p("Pensamiento crítico para ingeniería", class = "m-3"),
+          subtitle = p("Mtra. Erika Eréndira Zavala López", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/erika-zavala.153bf1ac7080.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "success",
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 01-07-2022 14:35:17", class = "m-0 small text-muted")
+      ),
+
+      userBox(
+        title = userDescription(
+          title = p("Proyecto terminal", class = "m-3"),
+          subtitle = p("Mtra. Nancy Aguas García", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/nancy-aguas.7b4e185a81f0.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "info",
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 31-06-2022 10:17:46", class = "m-0 small text-muted")
+      ),
+
+      userBox(
+        title = userDescription(
+          title = p("Minería de datos", class = "m-3"),
+          subtitle = p("Dr. Héctor Fernando Gómez García", class = "m-3"),
+          type = 2,
+          image = "https://www.unicaribe.mx/static/files/profesores/cbei/fernando-gomez.0731bdac903f.jpg"
+        ),
+
+        width = 4,
+        height = "150px",
+        status = "danger",
+        boxToolSize = "xl",
+        "Some text here",
+        footer = p("Ultima modificación: 31-06-2022 10:17:46", class = "m-0 small text-muted")
+      )
+    )
+  })
 }
 
-options(shiny.autoreload = TRUE)
 options(shiny.port = 4000)
 shinyApp(ui, server)

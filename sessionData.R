@@ -7,6 +7,7 @@ MONGODB_URI <- Sys.getenv('MONGODB_URI')
 
 students <- mongo(collection = "users", db = "sure", url = MONGODB_URI)
 profile_picture <- "profiles/170300075.jpg"
+
 # dropdown menu output
 messageData <- data.frame(
     from = I(list("Erika Zavala")),
@@ -91,22 +92,36 @@ conn <- dbConnect(
 dbListTables(conn)
 
 # Get payments data
-payments <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM pagos_", id_user))}
+payments <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM pagos_", id_user))
+}
 
 # Get data for academic offer
-aditionals <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM secciones_", id_user))}
+aditionals <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM secciones_", id_user))
+}
 
-workshops <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM talleres_", id_user))}
+workshops <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM talleres_", id_user))
+}
 
-foreign_languages <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM lengua_extranjera_", id_user))}
+foreign_languages <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM lengua_extranjera_", id_user))
+    }
 
 # Get data for professional practices
-practices <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM practicas_", id_user))}
+practices <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM practicas_", id_user))
+}
 
 # Get data for social service
-external_projects <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM proyectos_externos_", id_user))}
+external_projects <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM proyectos_externos_", id_user))
+}
 
-internal_projects <- function(id_user){dbGetQuery(conn, paste0("SELECT * FROM proyectos_internos_", id_user))}
+internal_projects <- function(id_user) {
+    dbGetQuery(conn, paste0("SELECT * FROM proyectos_internos_", id_user))
+}
 
 # Disconnet from database
-# sdbDisconnect(conn)
+# dbDisconnect(conn)
