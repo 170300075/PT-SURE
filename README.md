@@ -1,8 +1,21 @@
 # PT-SURE
-MIRO: https://miro.com/welcome/TXFkR1lqdlJtOTZnSzV0dDVaNTFZZDZQYnNZT1lJaDVQZmlMWTNaRFNYWXBiRnRZVlY0Mm4waUMyV1FBd0tjb3wzNDU4NzY0NTI3Njk0NDYxMDAw?share_link_id=170334272160
 
-<h2 style="color: lightblue; text-align: center">Repositorio del proyecto terminal</h2>
+## **S**istema **U**nificado de **R**ecomendación **E**scolar
 
+Se desarrollará un sistema para unificar los múltiples servicios que ofrece la universidad haciendo uso de técnicas de **webscrapping**, **sistemas de pruebas automatizadas** y **visualización de datos**. El sistema tiene como objetivo presentar una interfaz que sirva como máscara ante el conjunto de servicios que actualmente se disponen, por lo que éste proyecto en realidad hace uso del software existente.
+
+El **_SURE_** permitirá realizar un conjunto de tareas entre las que se encuentran:
+
+- Visualizar avance general en el mapa curricular
+- Mostrar indicadores clave de rendimiento escolar
+- Listar asignaturas de la oferta académica para el curso entrante
+- Generar un horario deseado de acuerdo a la oferta académica
+- Listar la oferta de prácticas profesionales
+- Mostrar los proyectos disponibles del Servicio Social
+- Visualizar el calendario escolar
+- Recomendar de asignaturas de acuerdo a los KPI
+- Mostrar el horario de clases
+- Cambiar credenciales del estudiante
 ## Instrucciones de instalación de ambiente de trabajo
 
 Para poder empezar a trabajar en el documento es necesario tener instalado las siguientes herramientas de desarrollo:
@@ -36,6 +49,8 @@ Dentro de **Python**:
 - pandas
 - numpy
 - selenium
+
+[Miro Mockup Creator](https://miro.com/welcome/TXFkR1lqdlJtOTZnSzV0dDVaNTFZZDZQYnNZT1lJaDVQZmlMWTNaRFNYWXBiRnRZVlY0Mm4waUMyV1FBd0tjb3wzNDU4NzY0NTI3Njk0NDYxMDAw?share_link_id=170334272160) 
 
 # Objetivos del dashboard
 
