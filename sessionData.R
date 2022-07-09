@@ -6,7 +6,6 @@ readRenviron(".env")
 MONGODB_URI <- Sys.getenv('MONGODB_URI')
 
 students <- mongo(collection = "users", db = "sure", url = MONGODB_URI)
-profile_picture <- "profiles/170300075.jpg"
 
 # dropdown menu output
 messageData <- data.frame(
@@ -55,6 +54,11 @@ getData <- function(input_id_user) {
 validateCredentials <- function(input_id_user, input_password) {
     student_data <- getData(input_id_user)
 
+    # Si el usuario no existe
+    if(length(student_data) == 0){
+      return(FALSE)
+    }
+    
     # Obtener la contraseña real del usuario
     password <- student_data$password
     
@@ -86,7 +90,8 @@ conn <- dbConnect(
   password = password,
   host = host,
   port = port,
-  dbname = dbname
+  dbname = dbname,
+  ssl.ca = "DigiCertGlobalRootCA.crt.pem"
 )
 
 dbListTables(conn)
@@ -97,30 +102,30 @@ payments <- function(id_user) {
 }
 
 # Get data for academic offer
-aditionals <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM secciones_", id_user))
+aditionals <- function(study_plan) {
+    dbGetQuery(conn, paste0("SELECT * FROM secciones_", tolower(study_plan)))
 }
 
-workshops <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM talleres_", id_user))
+workshops <- function(study_plan) {
+    dbGetQuery(conn, paste0("SELECT * FROM talleres_", tolower(study_plan)))
 }
 
-foreign_languages <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM lengua_extranjera_", id_user))
+foreign_languages <- function(study_plan) {
+    dbGetQuery(conn, paste0("SELECT * FROM lengua_extranjera_", tolower(study_plan)))
     }
 
 # Get data for professional practices
-practices <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM practicas_", id_user))
+practices <- function(id_practices) {
+    dbGetQuery(conn, paste0("SELECT * FROM practicas_", tolower(id_practices)))
 }
 
 # Get data for social service
-external_projects <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM proyectos_externos_", id_user))
+external_projects <- function(study_plan) {
+    dbGetQuery(conn, paste0("SELECT * FROM proyectos_externos_", tolower(study_plan)))
 }
 
-internal_projects <- function(id_user) {
-    dbGetQuery(conn, paste0("SELECT * FROM proyectos_internos_", id_user))
+internal_projects <- function(study_plan) {
+    dbGetQuery(conn, paste0("SELECT * FROM proyectos_internos_", tolower(study_plan)))
 }
 
 # Disconnet from database

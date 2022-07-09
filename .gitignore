@@ -4,4 +4,5 @@
 .Ruserdata
 .ipynb_checkpoints
 .idea
+.env
 desktop.ini

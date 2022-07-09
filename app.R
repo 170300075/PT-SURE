@@ -419,12 +419,12 @@ server <- function(input, output, session) {
       data$messageData <- messageData
       data$taskData <- taskData
       data$payments <- payments
-      data$aditionals <- aditionals(data$student_data$id_user)
-      data$workshops <- workshops(data$student_data$id_user)
-      data$foreign_languages <- foreign_languages(data$student_data$id_user)
-      data$practices <- practices(data$student_data$id_user)
-      data$internal_projects <- internal_projects(data$student_data$id_user)
-      data$external_projects <- external_projects(data$student_data$id_user)
+      data$aditionals <- aditionals(data$student_data$career$study_plan)
+      data$workshops <- workshops(data$student_data$career$study_plan)
+      data$foreign_languages <- foreign_languages(data$student_data$career$study_plan)
+      data$practices <- practices(data$student_data$career$current_practices)
+      data$internal_projects <- internal_projects(data$student_data$career$study_plan)
+      data$external_projects <- external_projects(data$student_data$career$study_plan)
       ## dbDisconnect(conn)
       
       
@@ -470,7 +470,7 @@ server <- function(input, output, session) {
     # adding the user specific data
     dashboardUser(
       name = data$student_data$username,
-      image = profile_picture,
+      image = data$student_data$profile_picture,
       title = data$student_data$career$name,
       subtitle = data$student_data$career$department,
       status = "navy",
@@ -616,7 +616,7 @@ server <- function(input, output, session) {
   output$user_panel <- renderUI({
     sidebarUserPanel(
       name = data$student_data$id_user,
-      image = profile_picture
+      image = data$student_data$ profile_picture
     )
   })
 
@@ -708,7 +708,7 @@ server <- function(input, output, session) {
         title = userDescription(
           title = paste(data$student_data$username, data$student_data$first_lastname, data$student_data$second_lastname),
           subtitle = data$student_data$career$name,
-          image = profile_picture,
+          image = data$student_data$profile_picture,
           backgroundImage = "https://cdn.statically.io/img/wallpaperaccess.com/full/1119564.jpg"
         ),
         
