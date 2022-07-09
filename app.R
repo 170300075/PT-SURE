@@ -6,7 +6,7 @@ library(toastui)
 library(ggplot2)
 library(DiagrammeR)
 library(waiter)
-library(shinymarkdown)
+# library(shinymarkdown)
 library(mapboxer)
 
 # our custom components
@@ -348,11 +348,11 @@ dashboard <- dashboardPage(
 
         uiOutput(outputId = "user_information"),
 
-        mdInput(
-          inputId = "editor", 
-          height = "500px", 
-          hide_mode_switch = FALSE
-        )
+        # mdInput(
+        #   inputId = "editor", 
+        #   height = "500px", 
+        #   hide_mode_switch = FALSE
+        # )
       )
     )
   ),
@@ -694,13 +694,13 @@ server <- function(input, output, session) {
   })
   
   # Render markdown editor
-  observeEvent(input$show, {
-    show_editor(.id = "editor")
-  })
+  # observeEvent(input$show, {
+  #   show_editor(.id = "editor")
+  # })
   
-  observeEvent(input$hide, {
-    hide_editor(.id = "editor")
-  })
+  # observeEvent(input$hide, {
+  #   hide_editor(.id = "editor")
+  # })
 
   output$user_information <- renderUI({
     fluidRow(
