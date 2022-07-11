@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(bs4Dash)
+library(shinyWidgets)
 library(dplyr)
 library(toastui)
 library(ggplot2)
@@ -8,6 +9,8 @@ library(DiagrammeR)
 library(waiter)
 # library(shinymarkdown)
 library(mapboxer)
+
+useSweetAlert()
 
 # our custom components
 source("matriculaInput.R")
@@ -456,6 +459,13 @@ server <- function(input, output, session) {
         selector = "#login_container",
         where = "afterBegin",
         ui = login
+      )
+
+      sendSweetAlert(
+        session = session,
+        title = "Opsss...",
+        text = "¡Tus credenciales son incorrectas!",
+        type = "error"
       )
     }
   })

@@ -1,0 +1,48 @@
+{
+    "id_user" : String,
+    "period" : Object {
+        "period_name" : String,
+        "average_grades" : Float,
+        "grades" : Array [Object {
+            'no.': Float,
+            'type': String,
+            'section': Float,1
+            'id_subject': String,
+            'teacher': String,
+            'modality': String,
+            'subject': String,
+            'first_partial': Float,
+            'second_partial': Float,
+            'thirds_partial': Float,
+            'average': Float,
+            'final_grade': Float
+        }]
+    }
+
+},
+
+
+# Ejemplo
+{
+    "id_user" : "170300075",
+    "grades" : Object {
+        "id_period": "201703",
+        "average_grades" : 7.14,
+        "total_credits": 32
+        "subject_grades" : Array [Object {
+            'no.': 2.0,
+            'type': 'OP1',
+            'section': 1.0,
+            'id_subject': 'ID0102',
+            'teacher': 'Sanchez Tellez / Trinidad Nohemi',
+            'modality': 'Asignatura Presencial',
+            'subject': 'Física clásica',
+            'first_partial': '7.0',
+            'second_partial': '8.0',
+            'third_partial': '7.0',
+            'average': '7.32999992',
+            'final_grade': '7.0'
+        }, Object {...}, ...]
+    }
+
+}
