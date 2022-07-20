@@ -1,17 +1,19 @@
- my_packages <- c("shiny", "bs4Dash", "sortable", "DBI", 
-                  "RMariaDB", "dplyr", "data.table", "DiagrammeR",
-                  "reticulate", "shinyWidgets", "highcharter", "plotly",
-                  "toastui", "DT", "telegram.bot", "mapboxer") 
+my_packages <- c("shiny", "bs4Dash", "sortable", "DBI", 
+              "RMariaDB", "dplyr", "data.table", "DiagrammeR",
+              "reticulate", "shinyWidgets", "highcharter", "plotly",
+              "toastui", "DT", "telegram.bot", "mapboxer", "mongolite") 
+
 
 # Install required packages
 lapply(my_packages, install.packages, character = TRUE)
+lapply(my_packages, require, character = TRUE)
 
 # Import database libraries
 library(DBI)
 library(RMariaDB)
 
 # read the environmental variables file
-readRenviron(".env")
+readRenviron("../.env")
 
 # Get student credentials
 # id_user <- Sys.getenv('ID')
